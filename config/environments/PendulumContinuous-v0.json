@@ -1,0 +1,12 @@
+{
+    "env_name": "PendulumContinuous-v0",
+    "total_timesteps": 10000,
+    "steps_per_episode": 1000,
+    "eval_interval_timesteps": 5000,
+    "eval_episodes": 5,
+    "gamma": 0.99,
+    "overwrite_rewards": false,
+	"continuous": true,
+    "rewards": {},
+    "start_state": []
+}
