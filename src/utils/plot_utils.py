@@ -55,7 +55,7 @@ def load_algorithm_seeds(seed_dir):
 # Evaluation Plot
 # ------------------------
 
-def plot_eval_curves(algo_data, algo_names, save_path):
+def plot_eval_curves(algo_data, algo_names, save_path, title: str):
 
     plt.figure(figsize=(8,5))
 
@@ -78,7 +78,7 @@ def plot_eval_curves(algo_data, algo_names, save_path):
 
     plt.xlabel("Training Timesteps")
     plt.ylabel("Evaluation Return")
-    plt.title("Evaluation Performance")
+    plt.title(title if title else "Offline Evaluation Rollout Performance")
     plt.grid(alpha=0.3)
     plt.legend()
 
@@ -91,7 +91,7 @@ def plot_eval_curves(algo_data, algo_names, save_path):
 # Training Plot
 # ------------------------
 
-def plot_train_curves(algo_data, save_path):
+def plot_train_curves(algo_data, save_path, title: str):
 
     plt.figure(figsize=(8,5))
 
@@ -122,7 +122,7 @@ def plot_train_curves(algo_data, save_path):
 
     plt.xlabel("Training Timesteps")
     plt.ylabel("Episode Return")
-    plt.title("Online Training Performance")
+    plt.title(title if title else "Online Performance")
     plt.grid(alpha=0.3)
     plt.legend()
 
@@ -145,8 +145,8 @@ def main(seed_dirs, algo_names, env_name, save_dir):
     for algo, directory in zip(algo_names, seed_dirs):
         algo_data[algo] = load_algorithm_seeds(directory)
 
-    plot_eval_curves(algo_data, algo_names, save_path)
-    plot_train_curves(algo_data, save_path)
+    plot_eval_curves(algo_data, algo_names, save_path, title=f"{env_name} Evaluation Performance")
+    plot_train_curves(algo_data, save_path, title=f"{env_name} Online Performance")
 
 
 if __name__ == "__main__":
