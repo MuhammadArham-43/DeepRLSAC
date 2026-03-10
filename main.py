@@ -83,10 +83,16 @@ def parse_args():
         default=0,
         help="Random seed for experiment.",
     )
+    parser.add_argument(
+        "--save_dir",
+        type=str,
+        default="./results/",
+        help="Save directory",
+    )
 
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    main(args.env_config, args.agent_config, seed=args.seed)
+    main(args.env_config, args.agent_config, seed=args.seed, save_dir=args.save_dir)
