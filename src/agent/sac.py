@@ -16,7 +16,6 @@ class SAC(BaseAgent):
         target_update_interval,
         critic_lr,
         actor_lr,
-        alpha_lr,
         actor_hidden_dim,
         critic_hidden_dim,
         replay_capacity,
@@ -24,10 +23,13 @@ class SAC(BaseAgent):
         batch_size,
         betas,
         env,
+        alpha_lr: float = None,
         baseline_actions=-1,
         cuda=False,
         clip_stddev=1000,
         init=None,
+        auto_entropy_tuning: bool = True,
+        alpha: float = None,
         activation="relu",
     ):
         super(SAC, self).__init__()
@@ -40,6 +42,12 @@ class SAC(BaseAgent):
         self._obs_space = env.observation_space
         if len(self._obs_space.shape) != 1:
             raise ValueError("SAC only supports vector observations")
+        
+        if auto_entropy_tuning and alpha_lr is None:
+            raise ValueError("For auto entropy setting, must provide the learning rate for alpha as alpha_lr")
+        if not auto_entropy_tuning and alpha is None:
+            raise ValueError("For fixed entropy setting, must provide a alpha value")
+        self.auto_entropy_tuning = auto_entropy_tuning
         
         self.torch_rng = torch.manual_seed(seed)
         self._rng = np.random.default_rng(seed)
@@ -61,8 +69,6 @@ class SAC(BaseAgent):
         self._target_update_interval = target_update_interval
         self._update_number = 0
 
-        self._alpha_lr = alpha_lr
-
         self._init_critic(
             self._obs_space,
             self._action_space,
@@ -83,13 +89,19 @@ class SAC(BaseAgent):
             betas,
             clip_stddev,
         )
-
-        self._target_entropy = -torch.prod(
-            torch.Tensor(self._action_space.shape).to(self._device)
-        ).item()
-        self._log_alpha = torch.zeros(1, requires_grad=True, device=self._device)
-        self._alpha = self._log_alpha.exp().detach()
-        self._alpha_optim = Adam([self._log_alpha], lr=self._alpha_lr, betas=betas)
+        
+        if self.auto_entropy_tuning:
+            self._alpha_lr = alpha_lr
+            self.auto_entropy_tuning = auto_entropy_tuning
+            self._target_entropy = -torch.prod(
+                torch.Tensor(self._action_space.shape).to(self._device)
+            ).item()
+            self._log_alpha = torch.zeros(1, requires_grad=True, device=self._device)
+            self._alpha = self._log_alpha.exp().detach()
+            self._alpha_optim = Adam([self._log_alpha], lr=self._alpha_lr, betas=betas)
+        else:
+            print(f"Initialized SAC with fixed entropy with alpha={alpha}")
+            self._alpha = alpha
     
     def reset(self):
         pass
@@ -205,12 +217,13 @@ class SAC(BaseAgent):
         policy_loss.backward()
         self._policy_optim.step()
 
-        alpha_loss = -(self._log_alpha * (log_pi + self._target_entropy).detach()).mean()
-        self._alpha_optim.zero_grad()
-        alpha_loss.backward()
-        self._alpha_optim.step()
+        if self.auto_entropy_tuning:
+            alpha_loss = -(self._log_alpha * (log_pi + self._target_entropy).detach()).mean()
+            self._alpha_optim.zero_grad()
+            alpha_loss.backward()
+            self._alpha_optim.step()
 
-        self._alpha = self._log_alpha.exp().detach()
+            self._alpha = self._log_alpha.exp().detach()
 
     def _update_critic(
         self,
