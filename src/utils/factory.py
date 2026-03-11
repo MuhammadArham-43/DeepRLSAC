@@ -1,9 +1,10 @@
-from src.agent import SAC
+from src.agent import SAC, ConstantEpsilonGreedySAC
 from src.environment import Environment
 
 
 AGENT_NAME_TO_CLASS_MAP = {
     "SAC": SAC,
+    "ConstantEpsilonGreedySAC" : ConstantEpsilonGreedySAC,
 }
 
 def create_env_and_agent(env_config, agent_config, seed, monitor=False, monitor_after=1000):
@@ -14,7 +15,7 @@ def create_env_and_agent(env_config, agent_config, seed, monitor=False, monitor_
     agent_name = agent_config["agent_name"]
     if agent_name not in AGENT_NAME_TO_CLASS_MAP:
         raise ValueError(f"Agent name {agent_name} not recognized. Available agents: {list(AGENT_NAME_TO_CLASS_MAP.keys())}")
-    agent_class = AGENT_NAME_TO_CLASS_MAP[agent_name.upper()]
+    agent_class = AGENT_NAME_TO_CLASS_MAP[agent_name]
     agent = agent_class(**agent_config["parameters"], env=env)
     return env, agent
     
