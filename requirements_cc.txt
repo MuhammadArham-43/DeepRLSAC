@@ -1,0 +1,6 @@
+gymnasium[classic-control]
+torch
+numpy
+matplotlib
+pandas
+imageio
