@@ -16,6 +16,6 @@
 	"critic_hidden_dim": 256,
 	"init": "xavier_uniform",
 	"clip_stddev": 1000,
-	"cuda": false
+	"cuda": true
     }
 }
