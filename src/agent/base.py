@@ -32,3 +32,6 @@ class BaseAgent(ABC):
     @abstractmethod
     def add_to_replay(self, state, action, reward, next_state, done_mask):
         pass
+
+    def on_episode_end(self):
+        pass

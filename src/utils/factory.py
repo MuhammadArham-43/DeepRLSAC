@@ -1,10 +1,15 @@
-from src.agent import SAC, ConstantEpsilonGreedySAC
 from src.environment import Environment
+from src.agent import (
+    SAC, 
+    EpsilonGreedySAC,
+    OUNoiseSAC,
+)
 
 
 AGENT_NAME_TO_CLASS_MAP = {
     "SAC": SAC,
-    "ConstantEpsilonGreedySAC" : ConstantEpsilonGreedySAC,
+    "EpsilonGreedySAC" : EpsilonGreedySAC,
+    "OUNoiseSAC": OUNoiseSAC,
 }
 
 def create_env_and_agent(env_config, agent_config, seed, monitor=False, monitor_after=1000):
