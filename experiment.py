@@ -143,6 +143,7 @@ class Experiment:
 
             self.timesteps_since_last_checkpoint += 1
         
+        self.agent.on_episode_end()
         end = time.time()
         return episode_return, episode_steps, (end - start)
 
@@ -191,5 +192,5 @@ class Experiment:
             state = next_state
             if not done:
                 action = self.agent.sample_action(next_state)
-        
+        self.agent.on_episode_end()
         return episode_return, episode_steps
