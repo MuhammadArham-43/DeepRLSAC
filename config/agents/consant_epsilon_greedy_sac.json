@@ -1,5 +1,5 @@
 {
-    "agent_name": "SAC",
+    "agent_name": "EpsilonGreedySAC",
     "parameters":
     {
 	"replay_capacity": 1000000,
@@ -11,11 +11,15 @@
 	"critic_lr": 3e-4,
 	"actor_lr": 3e-4,
     "auto_entropy_tuning": false,
-    "alpha": 0.0,
+    "alpha": 0.2,
 	"actor_hidden_dim": 256,
 	"critic_hidden_dim": 256,
 	"init": "xavier_uniform",
 	"clip_stddev": 1000,
-	"cuda": true
+	"cuda": true,
+	"epsilon_schedule": {
+            "type": "Constant",
+            "epsilon": 0.1
+        }
     }
 }

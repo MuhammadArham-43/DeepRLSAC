@@ -4,7 +4,6 @@
     "steps_per_episode": 1000,
     "eval_interval_timesteps": 50000,
     "eval_episodes": 30,
-    "update_after": 10000,
     "gamma": 0.99,
 	"continuous": true,
     "overwrite_rewards": false,
