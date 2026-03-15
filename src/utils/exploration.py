@@ -13,8 +13,8 @@ class ExplorationSchedule(ABC):
 class ConstantSchedule(ExplorationSchedule):
     """Returns the same value at every step."""
 
-    def __init__(self, epsilon: float):
-        self.value = epsilon
+    def __init__(self, value: float):
+        self.value = value
 
     def __call__(self, step: int) -> float:
         return self.value
