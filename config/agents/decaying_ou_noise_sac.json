@@ -1,5 +1,5 @@
 {
-    "agent_name": "EpsilonGreedySAC",
+    "agent_name": "OUNoiseSAC",
     "parameters":
     {
 	"replay_capacity": 1000000,
@@ -17,10 +17,11 @@
 	"init": "xavier_uniform",
 	"clip_stddev": 1000,
 	"cuda": true,
-	"epsilon_schedule": {
-            "type": "LinearAnnealing",
-            "start": 1.0,
-            "end": 0.0,
+	"ou_theta": 0.15,
+	"sigma_schedule": {
+            "type": "DecayingAnnealing",
+            "start": 0.25,
+            "end": 0.05,
             "num_steps": 100000
         }
     }

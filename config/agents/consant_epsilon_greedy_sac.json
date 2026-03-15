@@ -19,7 +19,7 @@
 	"cuda": true,
 	"epsilon_schedule": {
             "type": "Constant",
-            "epsilon": 0.1
+            "value": 0.1
         }
     }
 }
